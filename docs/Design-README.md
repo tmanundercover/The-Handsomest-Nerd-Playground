@@ -75,7 +75,9 @@ Single-page React + TypeScript web application integrating Zero2Launch API endpo
 
 - React + TypeScript
 - Zustand state management
-- MirageJS backend mocking
+- MirageJS backend mocking 
+- Firebase v2 Functions backend stubbed out from mocked backend
+- Firebase Hosting & Functions for deployment
 
 ### Client Implementation
 
