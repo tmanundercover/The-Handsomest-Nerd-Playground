@@ -1,17 +1,3 @@
-# 🧠 AI-Powered Media Playground – Development Kickstart (README.md)
-
-**Version:** 1.0  
-**Intended for:** Agile Dev Team + AI Agents  
-**Style:** GitHub README | Optimized for AI Parsing & Prompt Engineering  
-**Workflow:** Agile + Pair Programming + Test-Driven Development
-
----
-
-## 🎯 Project Objective
-
-You are building a **single-page TypeScript React application** that acts as a visually dynamic and responsive playground for **media-based AI APIs** (text, image, audio).
-
-Your mission is to implement the **Open AI API suite** with full interactivity and real-time rendering. This application will showcase the capabilities of AI media generation and analysis, providing an intuitive and beautiful user experience.
 # OpenAI API Integration Documentation - EACH ENDPOINT IS A HARD REQUIREMENT
 
 ## Table of Contents
@@ -84,8 +70,8 @@ Your mission is to implement the **Open AI API suite** with full interactivity a
   }
   ```
 - **Status Codes**:
-  - 200: Success
-  - 400/401/429/500: Standard OpenAI errors
+   - 200: Success
+   - 400/401/429/500: Standard OpenAI errors
 
 #### List Available Models
 - **URL**: `/v1/models`
@@ -101,7 +87,7 @@ Your mission is to implement the **Open AI API suite** with full interactivity a
 - **URL**: `/v1/audio/transcriptions`
 - **Method**: POST
 - **Headers**:
-  - Authorization: `Bearer <API_KEY>`
+   - Authorization: `Bearer <API_KEY>`
 - **Body**: `multipart/form-data` with field `file` and `model=whisper-1`
 - **Response**:
   ```json
@@ -218,19 +204,19 @@ interface ImageOptions {
 
 ### 3. Error Handling
 - Common status codes to handle:
-  - 400: Malformed request
-  - 401: Unauthorized (Invalid token)
-  - 413: Payload Too Large
-  - 429: Rate limit exceeded
-  - 500: Internal error
+   - 400: Malformed request
+   - 401: Unauthorized (Invalid token)
+   - 413: Payload Too Large
+   - 429: Rate limit exceeded
+   - 500: Internal error
 
 ---
 
 ### 4. Rate Limiting and Retries
 - Implement:
-  - Exponential backoff
-  - Retry-after header parsing
-  - Request timeouts and queuing
+   - Exponential backoff
+   - Retry-after header parsing
+   - Request timeouts and queuing
 
 ---
 
@@ -436,133 +422,3 @@ export class OpenAIClient {
   }
 }
 ```
-```
----
-
-## 🧩 Feature Modules
-
-Implement the following **API playground components**, each in its own UI section:
-
-### 1. 📄 Text Completion
-- Input field (textarea)
-- Model selector dropdown
-- Button to send prompt
-- Render markdown output
-- Add "Regenerate" and "Copy" buttons
-
-### 2. 🎙️ Audio Transcription
-- Upload or paste URL (mp3)
-- Model selector
-- Simulated chunked transcript (MirageJS backend)
-- Real-time updates with summaries
-- Show progress loader with dynamic % and transcript UI blocks
-
-### 3. 🔈 Audio Generation
-- Input: Text
-- Select: Voice and Vibe
-- Render: Audio player
-- Show fetch vs direct audio rendering modes
-- Toggle "Preview" or "Download" options
-
-### 4. 🧠 Image Analysis
-- Upload or paste image URL
-- Analyze button
-- Render natural language semantic description
-- Markdown-style output
-
-### 5. 🎨 Image Generation
-- Input: Text prompt
-- Options: Style selector, aspect ratio, size
-- Generate and render image preview (as base64 or URL)
-
-### 6. ⚙️ API Model Explorer
-- Model listing view (text, audio, image)
-- Fetch and render models and their capabilities
-- Filter by capability and endpoint
-- Render descriptions in expandable cards
-
----
-
-## ⚙️ Architecture Stack
-
-- **Frontend:** React + TypeScript + Vite
-- **Styling:** TailwindCSS + Radix UI
-- **Routing:** React Router
-- **Mocks:** MirageJS (for simulating chunked responses)
-- **Testing:** Vitest + React Testing Library + Cypress
-
----
-
-## ✅ Development Guidelines
-
-- ✅ Use **TDD**: Write tests first, then code to pass the test
-- ✅ Use **Pair Programming** (Buddy AI + Dev)
-- ✅ Use **Feature Branches** and Pull Requests
-- ✅ Use **Skeleton Loaders** during async fetches
-- ✅ Modularize components by API domain
-
----
-
-## 🧪 Test Strategy
-
-- Unit tests for all components, hooks, and services
-- Integration tests for simulated user workflows
-- Snapshot tests for markdown/image/audio renderers
-- MirageJS testing for chunked streaming simulation
-
----
-
-## 🧠 Prompt for AI Coding Agents
-
-```prompt
-You are a senior React + TypeScript engineer working in an Agile team with pair programming and full TDD.
-Build a Vite-based SPA that exposes multiple interactive panels, each corresponding to a Zero2Launch media API endpoint.
-Mock audio streaming using MirageJS. Include model selectors, chunked output rendering, skeleton loaders, and markdown/audio/image display components.
-Use TailwindCSS + Radix UI, and test with Vitest. Provide a beautiful developer-focused UX optimized for understanding AI outputs.
-```
-
----
-
-## 📁 File Structure (Suggestive)
-
-```
-/src
-  /components
-    /Text
-    /Audio
-    /Image
-    /Shared
-  /mocks
-  /services
-  /tests
-  /styles
-  App.tsx
-  main.tsx
-```
-
----
-
-## 🚀 First Sprint Plan
-
-- [ ] Set up Vite + TS + Tailwind + Radix UI base
-- [ ] Create skeleton loader components
-- [ ] Create Text Completion panel with markdown render
-- [ ] Set up MirageJS for mocking transcription API
-- [ ] Create global API service handler with error handling
-- [ ] Write unit tests for input → response pipelines
-
----
-
-## 🏁 Success Criteria
-
-- 🧠 All APIs are interactable with real-time rendering
-- 🔍 Code is modular, readable, and fully test-covered
-- 💡 UX is intuitive for devs and AI researchers alike
-- 📦 Build is lightweight and performance-optimized
-
----
-
-## 📜 License & Contribution
-
-MIT License – Fork and build your own playground. Contributions welcome.  
-Use this document as an AI-ready prompt to generate an MVP incrementally.

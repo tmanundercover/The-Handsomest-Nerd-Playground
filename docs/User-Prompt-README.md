@@ -1,17 +1,88 @@
-# 🧠 AI-Powered Media Playground – Development Kickstart (README.md)
+# Open AI  API Integration - React Application Design
 
-**Version:** 1.0  
-**Intended for:** Agile Dev Team + AI Agents  
-**Style:** GitHub README | Optimized for AI Parsing & Prompt Engineering  
-**Workflow:** Agile + Pair Programming + Test-Driven Development
+## Overview
 
----
+Single-page React + TypeScript web application integrating Open AI API endpoints with MirageJS backend simulation.
 
-## 🎯 Project Objective
+## Functional Requirements
 
-You are building a **single-page TypeScript React application** that acts as a visually dynamic and responsive playground for **media-based AI APIs** (text, image, audio).
+### Dynamic Input Interface
 
-Your mission is to implement the **Open AI API suite** with full interactivity and real-time rendering. This application will showcase the capabilities of AI media generation and analysis, providing an intuitive and beautiful user experience.
+- Intuitive form-based UI elements
+- Sliders, dropdowns, textareas, file inputs for parameter collection
+
+### Text Generation
+
+- Support message thread building (system/user/assistant)
+- Model selection
+- Markdown result rendering
+
+### Audio Transcription
+
+- Chunked file handling simulation
+- Speaker parsing (Speaker 1 by name, Speaker 2 by name, etc.)
+- Live conversation summary updates
+
+### Audio Generation
+
+- Text input interface
+- Voice/vibe selection
+- Audio playback integration
+
+### Image Capabilities
+
+- **Generation:**
+    - Prompt-based creation
+    - Data/URL modes
+    - Width/height/model/seed controls
+- **Analysis:**
+    - URL/upload support
+    - Prompt-based analysis
+    - Paragraph + raw JSON display
+
+### Input/Output Display
+
+- Styled audio players
+- Image viewers
+- Markdown renderers
+- Collapsible JSON views
+
+## UX/UI Requirements
+
+### Styling & Animation
+
+- Tailwind CSS implementation
+- Framer Motion animations
+- Dark theme with vibrant accents
+- shadcn/ui component integration
+
+### Layout & Responsiveness
+
+- Section-based navigation (tabs/accordions)
+- Animated skeleton loaders
+- Query history sidebar
+- Replayable previous outputs
+
+## Technical Requirements
+
+### Core Stack
+
+- React + TypeScript
+- Zustand state management
+- MirageJS backend mocking for chunked audio operations
+- Firebase v2 Functions backend stubbed out from mocked backend
+- Firebase v2 Functions backend for all other endpoints
+- Firestore for data persistence
+- Firebase Hosting & Functions for deployment
+
+# Client Implementation
+
+- OpenAIClient class
+    - Type-safe interfaces
+    - Error handling
+    - Retry logic
+    - API key security
+
 # OpenAI API Integration Documentation - EACH ENDPOINT IS A HARD REQUIREMENT
 
 ## Table of Contents
@@ -436,133 +507,54 @@ export class OpenAIClient {
   }
 }
 ```
-```
----
 
-## 🧩 Feature Modules
+### Utilities
 
-Implement the following **API playground components**, each in its own UI section:
+- Audio format validation (mp3, wav, m4a)
+- Image preview handling (thumbnail generation, lazy loading)
+- Transcription streaming with progress indicators
+- Download functionality for generated assets
+- Rate limiting and retry utilities
+- Error boundary wrappers
+- Data persistence helpers
+- Response caching layer
+- Type validation guards
+- Prompt template management
 
-### 1. 📄 Text Completion
-- Input field (textarea)
-- Model selector dropdown
-- Button to send prompt
-- Render markdown output
-- Add "Regenerate" and "Copy" buttons
+## Deliverables
 
-### 2. 🎙️ Audio Transcription
-- Upload or paste URL (mp3)
-- Model selector
-- Simulated chunked transcript (MirageJS backend)
-- Real-time updates with summaries
-- Show progress loader with dynamic % and transcript UI blocks
+1. OpenAIClient implementation
+  - Core API integration
+  - Type-safe interfaces
+  - Error handling
+  - Retry logic
+  - Rate limiting
 
-### 3. 🔈 Audio Generation
-- Input: Text
-- Select: Voice and Vibe
-- Render: Audio player
-- Show fetch vs direct audio rendering modes
-- Toggle "Preview" or "Download" options
+2. UI components
+  - Form elements
+  - Media players
+  - Image viewers
+  - Markdown renderers
+  - Loading states
+  - Error boundaries
 
-### 4. 🧠 Image Analysis
-- Upload or paste image URL
-- Analyze button
-- Render natural language semantic description
-- Markdown-style output
+3. MirageJS server configuration
+  - Route handlers
+  - Mock data generation
+  - Response delays
+  - Error simulation
 
-### 5. 🎨 Image Generation
-- Input: Text prompt
-- Options: Style selector, aspect ratio, size
-- Generate and render image preview (as base64 or URL)
+4. Tailwind setup
+  - Custom theme
+  - Dark mode
+  - Animation classes
+  - Component styles
+  - Responsive utilities
 
-### 6. ⚙️ API Model Explorer
-- Model listing view (text, audio, image)
-- Fetch and render models and their capabilities
-- Filter by capability and endpoint
-- Render descriptions in expandable cards
+5. Mock response data
+  - Chat completions
+  - Audio transcriptions
+  - Generated images
+  - Analysis results
+  - Error states
 
----
-
-## ⚙️ Architecture Stack
-
-- **Frontend:** React + TypeScript + Vite
-- **Styling:** TailwindCSS + Radix UI
-- **Routing:** React Router
-- **Mocks:** MirageJS (for simulating chunked responses)
-- **Testing:** Vitest + React Testing Library + Cypress
-
----
-
-## ✅ Development Guidelines
-
-- ✅ Use **TDD**: Write tests first, then code to pass the test
-- ✅ Use **Pair Programming** (Buddy AI + Dev)
-- ✅ Use **Feature Branches** and Pull Requests
-- ✅ Use **Skeleton Loaders** during async fetches
-- ✅ Modularize components by API domain
-
----
-
-## 🧪 Test Strategy
-
-- Unit tests for all components, hooks, and services
-- Integration tests for simulated user workflows
-- Snapshot tests for markdown/image/audio renderers
-- MirageJS testing for chunked streaming simulation
-
----
-
-## 🧠 Prompt for AI Coding Agents
-
-```prompt
-You are a senior React + TypeScript engineer working in an Agile team with pair programming and full TDD.
-Build a Vite-based SPA that exposes multiple interactive panels, each corresponding to a Zero2Launch media API endpoint.
-Mock audio streaming using MirageJS. Include model selectors, chunked output rendering, skeleton loaders, and markdown/audio/image display components.
-Use TailwindCSS + Radix UI, and test with Vitest. Provide a beautiful developer-focused UX optimized for understanding AI outputs.
-```
-
----
-
-## 📁 File Structure (Suggestive)
-
-```
-/src
-  /components
-    /Text
-    /Audio
-    /Image
-    /Shared
-  /mocks
-  /services
-  /tests
-  /styles
-  App.tsx
-  main.tsx
-```
-
----
-
-## 🚀 First Sprint Plan
-
-- [ ] Set up Vite + TS + Tailwind + Radix UI base
-- [ ] Create skeleton loader components
-- [ ] Create Text Completion panel with markdown render
-- [ ] Set up MirageJS for mocking transcription API
-- [ ] Create global API service handler with error handling
-- [ ] Write unit tests for input → response pipelines
-
----
-
-## 🏁 Success Criteria
-
-- 🧠 All APIs are interactable with real-time rendering
-- 🔍 Code is modular, readable, and fully test-covered
-- 💡 UX is intuitive for devs and AI researchers alike
-- 📦 Build is lightweight and performance-optimized
-
----
-
-## 📜 License & Contribution
-
-MIT License – Fork and build your own playground. Contributions welcome.  
-Use this document as an AI-ready prompt to generate an MVP incrementally.
