@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS", // Changed from "NodeNext" to "CommonJS" for Jest compatibility
+    "esModuleInterop": true,
+    "moduleResolution": "node", // Changed from "nodenext" to "node"
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "types": ["node", "jest"],
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "jsx": "react" // Added to support JSX if needed
+  },
+  "compileOnSave": true,
+  "include": [
+    "src",
+    "src/repository/__tests__"
+  ],
+  "exclude": ["node_modules"]
+}

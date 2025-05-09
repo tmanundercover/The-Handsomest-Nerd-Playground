@@ -1,0 +1,16 @@
+rules_version = '2';
+
+// Craft rules based on data in your Firestore database
+// allow write: if firestore.get(
+//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /workflows/{workflowId}/workflow_logs/{logId} {
+      allow read, write: if true;
+    }
+
+    match /{document=**} {
+      allow read, write: if request.time < timestamp.date(2025, 5, 30);
+    }
+  }
+}

@@ -1,560 +1,515 @@
-# Open AI  API Integration - React Application Design
+This Is supposed to be a Landing Page:
+// App.tsx – Production-Ready Landing Page for The Handsomest Nerd Inc.
+//
+// Built strictly to Brian, Josh, and Reqqy’s final requirements and design doc.
+// styled-components only. Accessibility & SEO 100%. All content complete—no dev notes or placeholders.
+//
+// Pair programmed: James & Terrell 👨🏾‍💻🤝👨🏻‍💻
 
-## Overview
+import React, { useCallback } from "react";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
+import { Helmet } from "react-helmet";
 
-Single-page React + TypeScript web application integrating Open AI API endpoints with MirageJS backend simulation.
+// ====== DESIGN TOKENS (from Josh's Style Guide) ======
+const COLORS = {
+primary: "#8A2BE2", // Electric Violet
+accent: "#6D0EB5", // Dark Violet
+secondary: "#E0E0E0", // Neuromorphic Gray
+white: "#FFFFFF",
+shadow: "rgba(34,34,68,0.07)",
+separator: "#D9D9EC",
+};
+const BORDER_RADIUS = "16px";
+const SPACING = 24;
+const FOCUS_VISIBLE_RING = `
+  outline: 3px solid ${COLORS.primary};
+  outline-offset: 2.5px;
+  box-shadow: 0 0 0 4px ${COLORS.accent}46;
+  transition: outline 0.13s, box-shadow 0.2s;
+`;
 
-## Functional Requirements
-
-### Dynamic Input Interface
-
-- Intuitive form-based UI elements
-- Sliders, dropdowns, textareas, file inputs for parameter collection
-
-### Text Generation
-
-- Support message thread building (system/user/assistant)
-- Model selection
-- Markdown result rendering
-
-### Audio Transcription
-
-- Chunked file handling simulation
-- Speaker parsing (Speaker 1 by name, Speaker 2 by name, etc.)
-- Live conversation summary updates
-
-### Audio Generation
-
-- Text input interface
-- Voice/vibe selection
-- Audio playback integration
-
-### Image Capabilities
-
-- **Generation:**
-    - Prompt-based creation
-    - Data/URL modes
-    - Width/height/model/seed controls
-- **Analysis:**
-    - URL/upload support
-    - Prompt-based analysis
-    - Paragraph + raw JSON display
-
-### Input/Output Display
-
-- Styled audio players
-- Image viewers
-- Markdown renderers
-- Collapsible JSON views
-
-## UX/UI Requirements
-
-### Styling & Animation
-
-- Tailwind CSS implementation
-- Framer Motion animations
-- Dark theme with vibrant accents
-- shadcn/ui component integration
-
-### Layout & Responsiveness
-
-- Section-based navigation (tabs/accordions)
-- Animated skeleton loaders
-- Query history sidebar
-- Replayable previous outputs
-
-## Technical Requirements
-
-### Core Stack
-
-- React + TypeScript
-- Zustand state management
-- MirageJS backend mocking for chunked audio operations
-- Firebase v2 Functions backend stubbed out from mocked backend
-- Firebase v2 Functions backend for all other endpoints
-- Firestore for data persistence
-- Firebase Hosting & Functions for deployment
-
-# Client Implementation
-
-- OpenAIClient class
-    - Type-safe interfaces
-    - Error handling
-    - Retry logic
-    - API key security
-
-# OpenAI API Integration Documentation - EACH ENDPOINT IS A HARD REQUIREMENT
-
-## Table of Contents
-1. Available Endpoints
-2. Detailed Endpoint Documentation
-3. Implementation Guidelines
-4. Error Handling
-5. Best Practices
-6. Models/Schemas
-
----
-
-## Available Endpoints
-
-### 1. Audio Transcription (Whisper)
-- **Direct File Upload**: `/v1/audio/transcriptions`
-- **URL-based Transcription**: (Custom implementation required via file fetch + POST)
-- **List Available Voices**: (See TTS voices: `/v1/audio/speech options`)
-
-### 2. Text Generation (Chat/Completion)
-- **Generate Chat Completion**: `/v1/chat/completions`
-- **List Available Models**: `/v1/models`
-
-### 3. Audio Generation (Text-to-Speech)
-- **Generate Audio**: `/v1/audio/speech`
-- **Generate Audio URL**: (Host returned audio yourself after receiving binary)
-
-### 4. Image Generation (DALL·E)
-- **Download Image Data**: `/v1/images/generations`
-- **Download Image URL**: (Same endpoint, returns URLs)
-
-### 5. Image Analysis (GPT-4 Vision)
-- **Analyze Image**: `/v1/chat/completions` (GPT-4-turbo with image content)
-
-### 6. Application Endpoints – Creative Use Cases (Built from primitives)
-- Chunked Audio Transcription from file
-- Chunked Audio Transcription from URL
-- Live Audio Transcription (not available in OpenAI API natively)
-- Conversationlizer – Segment speakers from transcript using GPT
-- Summarizer – Use GPT to summarize transcripts
-- Emoji Gallery – Use GPT + DALL·E to generate emoji inspiration and then generate SVG emojis
-- Speaking Part Extractor + Summary from Conversation
-
----
-
-## Detailed Endpoint Documentation
-
-### Text Generation
-
-#### Generate Chat Completion
-- **URL**: `/v1/chat/completions`
-- **Method**: POST
-- **Headers**:
-  - Authorization: `Bearer <API_KEY>`
-  - Content-Type: `application/json`
-- **Body**:
-  ```json
-  {
-    "model": "gpt-4-turbo",
-    "messages": [
-      { "role": "user", "content": "Summarize this transcript..." }
-    ],
-    "temperature": 0.7,
-    "max_tokens": 500
+// ====== GLOBAL STYLES ======
+const GlobalStyle = createGlobalStyle`
+  html, body {
+    height: 100%;
+    background: ${COLORS.secondary};
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    color: #222;
+    scroll-behavior: smooth;
   }
-- **Response**:
-  ```json
-  {
-    "choices": [{ "message": { "content": "summary..." } }]
+  *, *:before, *:after {
+    box-sizing: border-box;
   }
-  ```
-- **Status Codes**:
-  - 200: Success
-  - 400/401/429/500: Standard OpenAI errors
-
-#### List Available Models
-- **URL**: `/v1/models`
-- **Method**: GET
-- **Response**: Array of available models
-- **Status Codes**: 200
-
----
-
-### Audio Processing
-
-#### Transcribe Audio File (Whisper)
-- **URL**: `/v1/audio/transcriptions`
-- **Method**: POST
-- **Headers**:
-  - Authorization: `Bearer <API_KEY>`
-- **Body**: `multipart/form-data` with field `file` and `model=whisper-1`
-- **Response**:
-  ```json
-  { "text": "transcribed text" }
-  ```
-
----
-
-### Audio Generation
-
-#### Generate Audio (Text-to-Speech)
-- **URL**: `/v1/audio/speech`
-- **Method**: POST
-- **Body**:
-  ```json
-  {
-    "model": "tts-1",
-    "input": "Your text here",
-    "voice": "nova",
-    "response_format": "mp3"
+  :focus-visible {
+    ${FOCUS_VISIBLE_RING}
   }
-  ```
-- **Response**: Binary audio
-- **Voices Available**: alloy, echo, fable, onyx, nova, shimmer
+`;
 
----
+// ====== KEYWORDS & ANIMATION ======
+const KEYWORDS = [
+"AI-powered workflows",
+"n8n automations",
+"custom AI applications",
+"prompt engineering",
+"context engineering",
+"business automation",
+"no-code solutions",
+];
+const floatAnim = keyframes`
+  0%   { transform: translateY(0);}
+  55%  { transform: translateY(-10px);}
+  100% { transform: translateY(0);}
+`;
 
-### Image Processing
-
-#### Generate Image (DALL·E)
-- **URL**: `/v1/images/generations`
-- **Method**: POST
-- **Body**:
-  ```json
-  {
-    "prompt": "A futuristic cityscape at sunset",
-    "n": 1,
-    "size": "1024x1024"
+// ====== SVG HERO – Responsive, Accessible, Animated ======
+const HeroSVGWrapper = styled.div`
+  width: 100%;
+  max-width: 820px;
+  min-height: 270px;
+  margin: 0 auto ${SPACING * 1.5}px auto;
+  @media (max-width: 700px) {
+    min-height: 180px;
+    max-width: 98vw;
   }
-  ```
-- **Response**:
-  ```json
-  { "data": [{ "url": "https://..." }] }
-  ```
+`;
 
-#### Analyze Image (GPT-4 Vision)
-- **URL**: `/v1/chat/completions`
-- **Model**: `gpt-4-vision-preview`
-- **Body**:
-  ```json
-  {
-    "model": "gpt-4-vision-preview",
-    "messages": [
-      {
-        "role": "user",
-        "content": [
-          { "type": "text", "text": "What's in this image?" },
-          { "type": "image_url", "image_url": { "url": "https://..." } }
-        ]
-      }
-    ],
-    "max_tokens": 500
+const HeroSVG: React.FC = () => (
+<svg
+width="100%"
+height="100%"
+viewBox="0 0 1440 360"
+role="img"
+aria-label="Abstract workflow network illustration with keywords: AI-powered workflows, n8n automations, custom AI applications, prompt engineering, context engineering, business automation, no-code solutions."
+focusable="false"
+style={{ display: "block", width: "100%", height: "auto" }}
+xmlns="http://www.w3.org/2000/svg"
+>
+    <title>AI Automation Network – The Handsomest Nerd: Landing Hero</title>
+    <desc>
+      Abstract network of nodes and lines with overlayed AI, automation and
+      workflow service keywords.
+    </desc>
+    {/* ======= SVG LAYERS & ANIMATION ======= */}
+    <defs>
+      <radialGradient id="hero-gradient" cx="50%" cy="40%" r="100%">
+        <stop offset="0%" stopColor={COLORS.primary} />
+        <stop offset="70%" stopColor={COLORS.secondary} />
+        <stop offset="100%" stopColor={COLORS.secondary} />
+      </radialGradient>
+      <linearGradient id="line-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor={COLORS.primary} stopOpacity="0.18" />
+        <stop offset="100%" stopColor={COLORS.accent} stopOpacity="0.30" />
+      </linearGradient>
+    </defs>
+    {/* BG PANEL */}
+    <rect width="1440" height="360" rx="32" fill="url(#hero-gradient)" />
+    {/* NETWORK LINES */}
+    <g>
+      <path
+        d="M 120 220 Q 320 80 480 200 T 900 100 Q 1280 220 1340 280"
+        stroke="url(#line-grad)"
+        strokeWidth="6"
+        fill="none"
+        opacity="0.22"
+      />
+      <path
+        d="M 320 310 Q 420 150 900 220 Q 1250 250 1200 90"
+        stroke="url(#line-grad)"
+        strokeWidth="3.5"
+        fill="none"
+        opacity="0.2"
+      />
+      <path
+        d="M250 70 C 410 220, 940 190, 1150 320"
+        stroke="url(#line-grad)"
+        strokeWidth="2.5"
+        fill="none"
+        opacity="0.13"
+      />
+    </g>
+    {/* NETWORK NODES */}
+    <g>
+      <circle
+        cx="320"
+        cy="80"
+        r="30"
+        fill={COLORS.white}
+        stroke={COLORS.primary}
+        strokeWidth="4"
+        opacity="0.94"
+      />
+      <circle cx="900" cy="100" r="34" fill={COLORS.primary} opacity="0.82" />
+      <circle
+        cx="1280"
+        cy="220"
+        r="28"
+        fill={COLORS.secondary}
+        stroke={COLORS.primary}
+        strokeWidth="3"
+      />
+      <circle cx="480" cy="200" r="22" fill={COLORS.white} opacity="0.67" />
+      <circle cx="750" cy="220" r="17" fill={COLORS.primary} opacity="0.73" />
+      <circle cx="1200" cy="90" r="15" fill={COLORS.primary} opacity="0.67" />
+      <circle cx="1100" cy="180" r="12" fill={COLORS.accent} opacity="0.62" />
+    </g>
+    {/* OVERLAYED KEYWORDS */}
+    <g fontFamily="'Inter',Arial,sans-serif" fontWeight="600">
+      <text
+        x="314"
+        y="87"
+        fontSize="22"
+        fill={COLORS.primary}
+        textAnchor="middle"
+      >
+        {KEYWORDS[0]}
+      </text>
+      <text
+        x="910"
+        y="108"
+        fontSize="20"
+        fill={COLORS.white}
+        textAnchor="middle"
+      >
+        {KEYWORDS[1]}
+      </text>
+      <text
+        x="1287"
+        y="228"
+        fontSize="18"
+        fill={COLORS.primary}
+        textAnchor="middle"
+      >
+        {KEYWORDS[6]}
+      </text>
+      <text
+        x="490"
+        y="214"
+        fontSize="20"
+        fill={COLORS.primary}
+        textAnchor="middle"
+      >
+        {KEYWORDS[3]}
+      </text>
+      <text
+        x="1200"
+        y="98"
+        fontSize="18"
+        fill={COLORS.white}
+        textAnchor="middle"
+      >
+        {KEYWORDS[4]}
+      </text>
+      <text
+        x="750"
+        y="220"
+        fontSize="19"
+        fill={COLORS.primary}
+        textAnchor="middle"
+      >
+        {KEYWORDS[2]}
+      </text>
+      <text
+        x="1100"
+        y="180"
+        fontSize="17"
+        fill={COLORS.accent}
+        textAnchor="middle"
+      >
+        {KEYWORDS[5]}
+      </text>
+    </g>
+  </svg>
+);
+
+// ====== MAIN LAYOUT (HERO SECTION & INTERACTIVE) ======
+const HeroSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: ${SPACING * 2}px ${SPACING}px ${SPACING * 2.5}px;
+  background: linear-gradient(
+    140deg,
+    ${COLORS.primary} 0%,
+    ${COLORS.secondary} 82%
+  );
+  min-height: 85vh;
+  width: 100vw;
+  position: relative;
+  overflow-x: hidden;
+  border-radius: 0 0 ${BORDER_RADIUS} ${BORDER_RADIUS};
+  box-shadow: 0 3px 30px ${COLORS.primary}10, 0 0 0 1px ${COLORS.separator};
+  @media (max-width: 700px) {
+    padding: ${SPACING + 7}px ${SPACING / 2.5}px 36px;
+    min-height: 90vh;
+    border-radius: 0 0 ${BORDER_RADIUS} ${BORDER_RADIUS};
   }
-  ```
+`;
 
----
-
-## Implementation Guidelines
-
-### 1. Client Configuration
-```typescript
-interface OpenAIConfig {
-  apiKey: string;
-  baseUrl?: string;
-  timeout?: number;
-}
-```
-
-### 2. Core Functions to Implement
-
-#### Chat Completion
-```typescript
-interface ChatMessage {
-  role: "system" | "user" | "assistant";
-  content: string;
-}
-interface CompletionOptions {
-  model?: string;
-  temperature?: number;
-  max_tokens?: number;
-}
-```
-
-#### Audio Handling
-```typescript
-interface AudioTranscriptionResult {
-  text: string;
-}
-interface TTSOptions {
-  voice?: string;
-  format?: 'mp3' | 'wav';
-}
-```
-
-#### Image Generation
-```typescript
-interface ImageOptions {
-  prompt: string;
-  size?: "256x256" | "512x512" | "1024x1024";
-}
-```
-
----
-
-### 3. Error Handling
-- Common status codes to handle:
-  - 400: Malformed request
-  - 401: Unauthorized (Invalid token)
-  - 413: Payload Too Large
-  - 429: Rate limit exceeded
-  - 500: Internal error
-
----
-
-### 4. Rate Limiting and Retries
-- Implement:
-  - Exponential backoff
-  - Retry-after header parsing
-  - Request timeouts and queuing
-
----
-
-## Implementation Example Structure
-```typescript
-class OpenAIClient {
-  constructor(config: OpenAIConfig) { /* store config */ }
-
-  async chat(messages: ChatMessage[], options?: CompletionOptions): Promise<string> { /* call /chat/completions */ }
-
-  async transcribe(file: Buffer): Promise<AudioTranscriptionResult> { /* call /audio/transcriptions */ }
-
-  async speak(text: string, options?: TTSOptions): Promise<Buffer> { /* call /audio/speech */ }
-
-  async generateImage(prompt: string, options?: ImageOptions): Promise<string[]> { /* call /images/generations */ }
-
-  async analyzeImage(imageUrl: string): Promise<string> { /* call /chat/completions with image */ }
-}
-```
-
----
-
-## Best Practices
-
-### Error Handling
-- Provide clear feedback to user-facing apps
-- Use logs to capture full response metadata
-
-### Performance
-- Cache model lists
-- Preprocess input (e.g., compress images/audio)
-
-### Security
-- Store API keys securely
-- Sanitize and validate input
-
-### Monitoring
-- Log usage by endpoint
-- Respect rate limits via Retry-After
-
----
-
-## Models/Schemas
-
-### Models (Chat & Vision)
-- gpt-4, gpt-4-32k, gpt-4-turbo, gpt-3.5-turbo
-- gpt-4-vision-preview
-
-### Audio
-- whisper-1 (transcription)
-- tts-1, tts-1-hd (speech)
-
-### Image
-- dall-e-3, dall-e-2
-
----
-
-# 🧠 OpenAI TypeScript Starter Client
-
-```typescript
-// openai-client.ts
-
-import axios, { AxiosInstance } from 'axios';
-
-interface ClientConfig {
-  apiKey: string;
-  baseUrl?: string;
-  timeout?: number;
-}
-
-interface Message {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
-
-interface TextGenerationOptions {
-  model?: string;
-  temperature?: number;
-  max_tokens?: number;
-  stream?: boolean;
-}
-
-interface AudioTranscriptionResult {
-  text: string;
-}
-
-interface AudioOptions {
-  model?: string;
-  language?: string;
-  prompt?: string;
-  temperature?: number;
-}
-
-interface VoiceOptions {
-  voice?: string; // e.g. "alloy", "echo", "nova", etc.
-}
-
-interface ImageOptions {
-  prompt: string;
-  n?: number;
-  size?: '256x256' | '512x512' | '1024x1024';
-  response_format?: 'url' | 'b64_json';
-}
-
-interface AnalysisOptions {
-  messages: Message[];
-  model?: string;
-  max_tokens?: number;
-}
-
-export class OpenAIClient {
-  private client: AxiosInstance;
-  private apiKey: string;
-
-  constructor(config: ClientConfig) {
-    this.apiKey = config.apiKey;
-    this.client = axios.create({
-      baseURL: config.baseUrl ?? 'https://api.openai.com/v1',
-      timeout: config.timeout ?? 15000,
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-    });
+const Heading = styled.h1`
+  color: ${COLORS.white};
+  font-size: 2.6rem;
+  letter-spacing: -0.04em;
+  margin-bottom: ${SPACING}px;
+  margin-top: ${SPACING / 2}px;
+  max-width: 800px;
+  text-align: center;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  line-height: 1.12;
+  text-shadow: 0 2px 18px ${COLORS.primary}22;
+  @media (max-width: 600px) {
+    font-size: 2rem;
+    line-height: 1.18;
   }
+`;
 
-  // 1. Chat Completion
-  async generateText(messages: Message[], options?: TextGenerationOptions): Promise<string> {
-    const model = options?.model ?? 'gpt-4';
-    const response = await this.client.post('/chat/completions', {
-      model,
-      messages,
-      temperature: options?.temperature ?? 1,
-      max_tokens: options?.max_tokens ?? 500,
-      stream: options?.stream ?? false,
-    });
-
-    return response.data.choices[0].message.content;
+const SubHeading = styled.p`
+  color: ${COLORS.white};
+  font-size: 1.22rem;
+  margin-bottom: ${SPACING * 0.9}px;
+  font-weight: 500;
+  max-width: 540px;
+  text-align: center;
+  line-height: 1.42;
+  opacity: 0.92;
+  text-shadow: 0 1px 8px ${COLORS.primary}14;
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    padding: 0 4vw;
+    margin-bottom: ${SPACING * 0.65}px;
   }
+`;
 
-  // 2. Transcribe Audio File
-  async transcribeAudio(file: Buffer, filename = 'audio.mp3', options?: AudioOptions): Promise<AudioTranscriptionResult> {
-    const form = new FormData();
-    form.append('file', file, filename);
-    form.append('model', options?.model ?? 'whisper-1');
-
-    const response = await this.client.post('/audio/transcriptions', form, {
-      headers: {
-        ...form.getHeaders(),
-        'Authorization': `Bearer ${this.apiKey}`,
-      },
-    });
-
-    return response.data;
+const CTAButton = styled.button<{ variant?: "primary" | "secondary" }>`
+  padding: 0.98em 2.3em;
+  font-size: 1.15rem;
+  font-family: inherit;
+  color: ${({ variant }) =>
+    variant === "secondary" ? COLORS.primary : COLORS.white};
+  background: ${({ variant }) =>
+    variant === "secondary" ? COLORS.white : COLORS.primary};
+  border: ${({ variant }) =>
+    variant === "secondary" ? `2px solid ${COLORS.primary}` : "none"};
+  border-radius: ${BORDER_RADIUS};
+  font-weight: 700;
+  box-shadow: 0 2px 12px ${COLORS.primary}15, 0 1.5px 0.5px ${COLORS.shadow};
+  margin: 0;
+  min-width: 220px;
+  min-height: 52px;
+  cursor: pointer;
+  outline: none;
+  letter-spacing: -0.02em;
+  user-select: none;
+  margin-bottom: 0;
+  transition: background 0.23s, color 0.19s, box-shadow 0.17s, transform 0.13s;
+  &:hover,
+  &:focus-visible {
+    background: ${({ variant }) =>
+      variant === "secondary" ? COLORS.secondary : "#a150ee"};
+    color: ${({ variant }) =>
+      variant === "secondary" ? "#a150ee" : COLORS.white};
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 22px ${COLORS.primary}28, 0 1.5px 0.5px ${COLORS.shadow};
   }
-
-  // 3. Generate Audio (Text-to-Speech)
-  async generateAudio(text: string, options?: VoiceOptions): Promise<Buffer> {
-    const response = await this.client.post('/audio/speech', {
-      model: 'tts-1',
-      input: text,
-      voice: options?.voice ?? 'alloy',
-    }, {
-      responseType: 'arraybuffer',
-    });
-
-    return Buffer.from(response.data);
+  &:active {
+    background: ${({ variant }) =>
+      variant === "secondary" ? "#F3F3FD" : COLORS.accent};
+    color: ${({ variant }) =>
+      variant === "secondary" ? COLORS.accent : COLORS.white};
+    transform: scale(0.98);
+    box-shadow: 0 1px 10px ${COLORS.primary}10, 0 1.5px 0.5px ${COLORS.shadow};
   }
-
-  // 4. Generate Image
-  async generateImage(options: ImageOptions): Promise<string[]> {
-    const response = await this.client.post('/images/generations', {
-      prompt: options.prompt,
-      n: options.n ?? 1,
-      size: options.size ?? '1024x1024',
-      response_format: options.response_format ?? 'url',
-    });
-
-    return response.data.data.map((img: any) => img.url || img.b64_json);
+  @media (max-width: 650px) {
+    min-width: 100%;
+    width: 100%;
+    font-size: 1.08rem;
+    margin-bottom: 0.7rem;
   }
+`;
 
-  // 5. Analyze Image (Vision model)
-  async analyzeImage(imageUrl: string, prompt: string, options?: AnalysisOptions): Promise<string> {
-    const model = options?.model ?? 'gpt-4-vision-preview';
-    const messages = [
-      { role: 'system', content: 'You are a helpful assistant.' },
-      {
-        role: 'user',
-        content: [
-          { type: 'text', text: prompt },
-          { type: 'image_url', image_url: { url: imageUrl } },
-        ],
-      },
-    ];
-
-    const response = await this.client.post('/chat/completions', {
-      model,
-      messages,
-      max_tokens: options?.max_tokens ?? 300,
-    });
-
-    return response.data.choices[0].message.content;
+const ButtonRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${SPACING}px;
+  margin-top: ${SPACING}px;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  @media (max-width: 650px) {
+    flex-direction: column;
+    gap: 11px;
+    width: 100%;
+    margin-top: ${SPACING * 0.7}px;
   }
+`;
+
+// Accessibility/animation tags for keywords
+const KeywordTag = styled.span`
+  background: ${COLORS.white};
+  color: ${COLORS.primary};
+  border-radius: 22px;
+  padding: 0.3em 1.15em;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 1.5px 7px #0001;
+  margin: 0 4px 8px 4px;
+  cursor: default;
+  line-height: 1.14;
+  animation: ${floatAnim} 4s ease-in-out infinite;
+  display: inline-block;
+  vertical-align: middle;
+  user-select: text;
+  &:nth-child(1) {
+    animation-delay: 0s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.33s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.66s;
+  }
+  &:nth-child(4) {
+    animation-delay: 0.99s;
+  }
+  &:nth-child(5) {
+    animation-delay: 1.21s;
+  }
+  &:nth-child(6) {
+    animation-delay: 1.49s;
+  }
+  &:nth-child(7) {
+    animation-delay: 1.61s;
+  }
+  @media (max-width: 650px) {
+    font-size: 0.97rem;
+    padding: 0.22em 0.86em;
+    margin-bottom: 4px;
+    text-align: center;
+    max-width: 97vw;
+    box-sizing: border-box;
+  }
+`;
+
+const KeywordsContainer = styled.div`
+  margin-top: ${SPACING / 1.2}px;
+  margin-bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 8px;
+  row-gap: 5px;
+  max-width: 820px;
+  @media (max-width: 700px) {
+    margin-top: ${SPACING * 0.6}px;
+    justify-content: center;
+    max-width: 98vw;
+  }
+`;
+
+// ====== CTA BUTTON LOGGING HANDLER ======
+function logCTA(label: string) {
+// Event logging for CTA analytics integration; Antosh’s hook can go here.
+if (window && typeof window !== "undefined" && "dataLayer" in window) {
+// Analytics event (for GTM or similar)
+// @ts-ignore
+window.dataLayer.push({ event: "cta_click", label });
+} else {
+// Fallback for demo/dev environments
+// eslint-disable-next-line no-console
+console.log(`CTA_CLICK:${label}`);
 }
-```
+}
 
-### Utilities
+const CTA_CONFIG = [
+{ text: "Book a Free Consultation", variant: "primary" },
+{ text: "See Our AI Services", variant: "secondary" },
+{ text: "Get Your Custom Proposal", variant: "primary" },
+];
 
-- Audio format validation (mp3, wav, m4a)
-- Image preview handling (thumbnail generation, lazy loading)
-- Transcription streaming with progress indicators
-- Download functionality for generated assets
-- Rate limiting and retry utilities
-- Error boundary wrappers
-- Data persistence helpers
-- Response caching layer
-- Type validation guards
-- Prompt template management
+// =========== MAIN APP EXPORT ===========
+const App: React.FC = () => {
+const getCTAHandler = useCallback((label: string) => () => logCTA(label), []);
 
-## Deliverables
+return (
+<>
+<Helmet>
+<title>Supercharge Your Business with AI – The Handsomest Nerd</title>
+<meta
+name="description"
+content="Unlock the power of AI-powered workflows, n8n automations, and custom solutions for your business. Book a free AI consultation today!"
+/>
+<meta
+property="og:title"
+content="Supercharge Your Business with AI – The Handsomest Nerd"
+/>
+<meta property="og:image" content="/og_image.png" />
+<meta
+property="og:description"
+content="AI-powered workflows, n8n automations, business automation and custom prompt engineering. Book your free AI consult today!"
+/>
+{/* Google Fonts: Inter */}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossOrigin="anonymous"
+/>
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+rel="stylesheet"
+/>
+</Helmet>
+<GlobalStyle />
+<HeroSection
+role="region"
+aria-label="Landing Page Hero and Service Overview"
+>
+<Heading
+tabIndex={0}
+aria-label="Supercharge Your Business with AI – Let The Handsomest Nerd Show You How"
+>
+Supercharge Your Business with AI – Let The Handsomest Nerd Show You
+How
+</Heading>
+<SubHeading
+tabIndex={0}
+aria-label="Unleash the power of AI-powered workflows, n8n automations, and custom solutions. Propel your business with cutting-edge context and prompt engineering."
+>
+Unleash the power of AI-powered workflows, n8n automations, and custom
+solutions.
+<br />
+Propel your business with cutting-edge context &amp; prompt
+engineering.
+</SubHeading>
+<HeroSVGWrapper aria-label="Hero Illustration – AI Workflow Network">
+<HeroSVG />
+</HeroSVGWrapper>
+<KeywordsContainer role="list" aria-label="Service Types">
+{KEYWORDS.map((kw, i) => (
+<KeywordTag key={i} role="listitem" aria-label={kw} tabIndex={0}>
+{kw}
+</KeywordTag>
+))}
+</KeywordsContainer>
+<ButtonRow role="group" aria-label="Call-to-Action Buttons">
+{CTA_CONFIG.map(({ text, variant }, idx) => (
+<CTAButton
+key={text}
+variant={variant as "primary" | "secondary"}
+aria-label={text}
+tabIndex={0}
+onClick={getCTAHandler(text)}
+>
+{text}
+</CTAButton>
+))}
+</ButtonRow>
+</HeroSection>
+</>
+);
+};
 
-1. OpenAIClient implementation
-  - Core API integration
-  - Type-safe interfaces
-  - Error handling
-  - Retry logic
-  - Rate limiting
-
-2. UI components
-  - Form elements
-  - Media players
-  - Image viewers
-  - Markdown renderers
-  - Loading states
-  - Error boundaries
-
-3. MirageJS server configuration
-  - Route handlers
-  - Mock data generation
-  - Response delays
-  - Error simulation
-
-4. Tailwind setup
-  - Custom theme
-  - Dark mode
-  - Animation classes
-  - Component styles
-  - Responsive utilities
-
-5. Mock response data
-  - Chat completions
-  - Audio transcriptions
-  - Generated images
-  - Analysis results
-  - Error states
-
+export default App;
+but the Graphic in the middle is not very good. Please get Josh to work hard on that and draft up a png that is a svg style mockup. Once he has that have him generate svg mockups or assets that the developers can use to implement the Design and Requirements. Please Brian kick off the pair programming with an examination of the project-structure sub-directory on github it will have the Design Document Template that you us to create a detailed design following the template for this application at hand. Then Reqqy generates the requirements and breaks them down into 1 to 3 point size issues in JSON format and stores those appropriately encoded in base64 format for Github. Reqqy passes the Requirements and the Design to Josh who Generates an inspiration picture with a 3500 or word less prompt to Open AI Dall-E. The from that image he generates svg assets for the team to us in the next stages. Terrell looks at the Design and the Requirements and implements the mockup using any assets that Josh created. Terrell Starts by grabbing an issue that has a tag with his name and implements it. Leaves a comment on the issue about status and then moves to the next issue. Then Terrell does a thorough code review with issues created in github for James. Then James takes the code performs all issues from code review leaving comments and issues for Terrell to integrate his change. Terrell checks the comments for things he can do and they pair program to complete the remaining issues for the deliverable of a functioning application. Reqqy then follows the testing document to make sure all requriements are met then Brian does last QA to make sure it runs error free and is deployed to firebase hosting and other firebase services required for this app.   Please deliver a working Much better SVG Diiagram in the middle. Also it's super wordy. Eliminate the clutter by singling out 3 things an AI Consultant would offer.
