@@ -628,20 +628,56 @@ const App: React.FC = () => {
 export default App;
 ```
 
-but the Graphic in the middle is not very good. Please get Josh to work hard on that and draft up a png that is a svg
-style mockup. Once he has that have him generate svg mockups or assets that the developers can use to implement the
-Design and Requirements. Please Brian kick off the pair programming with an examination of the project-structure
-sub-directory on github it will have the Design Document Template that you us to create a detailed design following the
-template for this application at hand. Then Reqqy generates the requirements and breaks them down into 1 to 3 point size
-issues in JSON format and stores those appropriately encoded in base64 format for Github. Reqqy passes the Requirements
-and the Design to Josh who Generates an inspiration picture with a 3500 or word less prompt to Open AI Dall-E. The from
-that image he generates svg assets for the team to us in the next stages. Terrell looks at the Design and the
-Requirements and implements the mockup using any assets that Josh created. Terrell Starts by grabbing an issue that has
-a tag with his name and implements it. Leaves a comment on the issue about status and then moves to the next issue. Then
-Terrell does a thorough code review with issues created in github for James. Then James takes the code performs all
-issues from code review leaving comments and issues for Terrell to integrate his change. Terrell checks the comments for
-things he can do and they pair program to complete the remaining issues for the deliverable of a functioning
-application. Reqqy then follows the testing document to make sure all requriements are met then Brian does last QA to
-make sure it runs error free and is deployed to firebase hosting and other firebase services required for this app.
-Please deliver a working Much better SVG Diiagram in the middle. Also it's super wordy. Eliminate the clutter by
-singling out 3 things an AI Consultant would offer.
+# THN Landing Page Project Requirements
+
+## Core Offering
+
+The landing page should showcase The Handsomest Nerd's three primary AI services:
+
+- Prompt Engineering Consultation
+- LLM Testing & Validation Services
+- AI-Powered Web Development
+
+## Design Requirements
+
+Josh to create custom SVG assets focused on an elegant AI agent theme:
+
+- Central hero SVG featuring an abstract AI agent/assistant
+- Supporting geometric network/connection graphics
+- Clean, modern aesthetic with THN brand colors
+- Animated elements to add subtle motion
+- Responsive design that works across devices
+
+## Technical Requirements
+
+- React/TypeScript frontend with semantic HTML/CSS
+- Node.js backend integration
+- Firebase hosting and services
+- Accessibility compliance (WCAG 2.1)
+- Performance optimization
+- Clean code architecture
+- Comprehensive test coverage
+
+## Development Process
+
+1. Josh provides AI-themed SVG mockups and assets
+2. Terrell implements core UI components
+3. James handles backend integration
+4. Pair programming sessions to refine features
+5. Code review and QA processes
+6. Performance testing and optimization
+7. Deployment to Firebase hosting
+
+The final product should demonstrate THN's AI expertise through an engaging, error-free experience that converts
+visitors into consultation requests.
+
+## Success Metrics
+
+- Load time under 2 seconds
+- 100% accessibility score
+- Zero console errors
+- Smooth animations at 60fps
+- Clear conversion paths
+- Mobile-first responsive design
+
+Let's create something that showcases THN's capabilities in both AI and web development.
