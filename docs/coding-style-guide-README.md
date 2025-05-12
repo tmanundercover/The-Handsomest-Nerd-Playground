@@ -11,7 +11,24 @@ these conventions:
 - **{componentTool}.service.ts**: Any service, utility, or helper functions used specifically for this component.
 - **utils.ts**: Shared functions, e.g., formatting, validation, etc.
 - **SVG Asset Files**: Each SVG must be exported as a separate, optimized, and validated asset file (e.g.,
-  IconName.svg). Remove unnecessary tags/attributes. icons go in icons
+  IconName.svg) in the assets directory. Remove unnecessary tags/attributes. icons go in icons
+- **{README.md**: Comprehensive documentation extracted from comments and code.
+- **{task-report-README.md**: Checklist of tasks completed and pending.
+- **{style-guide-README.md**: Adherence to Josh's style guide.
+- **{app.csv**: Input data in CSV format, if applicable.
+- **{App.tsx**: Root Presentational component application file.
+- **{App.style.ts**: All styled-components for App and styled components used accross more than one component.
+- **{App.types.tsx**: All types for App and types/models used across more than one component.
+- **{components/{component}** : Directory for component files for component A
+- **{components/{component}/{component}.tsx**: Presentational component importing from {component}'s `.style` and `.types`.
+- **{components/{component}/{component}.style.ts**: All styled-components for {component}.
+- **{components/{component}/{component}.types.tsx**: Types and interfaces.
+- **{services/use{ComponentTool}.service.ts**: Component-specific or Application-specific services or utilities.
+- **{utils.ts**: Shared helper functions.
+- **{assets/*.svg**: Extracted and optimized SVG assets.
+- **{api/useMirageApi.ts**: a hook that has the MirageJs server functionality implemented in it's entirety
+- **{api/api.types.ts**: types for the MirageJs server
+- **{globalStyles.ts**: the Styled Component DefaultTheme as extracted style tokens.
 
 ## Codesandbox Check:
 
