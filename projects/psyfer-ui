@@ -1,0 +1,29 @@
+# make a gpt interface to market our "The Handsomest Nerd 
+(with our partner TenK Solutions) One page React Application 
+Generator" Workflow to a potential client and future 
+partner Psyfer. Psyfer creates websites for clients 
+in html, css, and plain js for dependability. our 
+Application Generator workflow Creates a One page React 
+application in one App.tsx without the need for 
+external files. then it spits out a link to a codesandbox set up with the project.The backend is mocked in miragejs with production level detail with leading 
+comments to create the actual api in firebase v2 
+functions environment using the Controller Service 
+Repository pattern. give me the order of the 
+agents and what their user prompts should be along 
+the way. the system promot will be about the agents and what their jobs are just to give the agent context l. the user prompt tells the agent who they are and what they need to do. i dont want actual jest tests in the final 
+output i just want the application App.tsx but with the dependability if jest tests... that 
+app.tsx then goes into an agent designed to split 
+the massive app.tsx file into its componet parts to 
+build a codesandbox sandbox with the create-react-app template to translate to a that will preview a 
+production level working preview of the application 
+in codesandbox. please give me the SERIAL workflow in our 
+json format and our agents(only terrell, james, brian, nat, compass, josh, reqqy)that will do this. 
+consider i have an http Post enpoint that accepts 
+an object in codesandbox "define" endpoint format. 
+and returns the split files. i have a ui that will 
+submit the users prompt to generate a one page react 
+app to the workflow. the ui then displays the 
+onepage app.tsx and you have options to 
+copy(for paste to codesandbox), view
+codesanbox(i have an endpoint that accepts the 
+define post body and creates a sandbox AND RETURNS A link to the sandbox.
