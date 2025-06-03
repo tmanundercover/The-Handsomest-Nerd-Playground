@@ -1,0 +1,14 @@
+{
+  "setupTasks": ["setup", "build"],
+  "tasks": {
+    "setup": {
+      "command": "npm install",
+      "name": "Initial Setup",
+      "description": "Install extra tools and bootstrap the environment"
+    },
+    "build": {
+      "command": "npm run build",
+      "name": "Build Project"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "include": [
+    "./src/**/*",
+    "global.d.ts",
+    "types/styled-components.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "functions",
+    "build",
+    "./node_modules/@firebase/**/*"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "lib": [
+      "dom",
+      "es2015"
+    ],
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true
+  }
+}
